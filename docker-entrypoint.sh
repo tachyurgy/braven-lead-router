@@ -35,8 +35,6 @@ define( 'FS_METHOD', 'direct' );
 define( 'DISALLOW_FILE_EDIT', true );
 define( 'AUTOMATIC_UPDATER_DISABLED', true );
 PHP
-	fi
-
 fi
 
 # 2) Ensure the SQLite drop-in (db.php) is present — replace the two placeholders.
