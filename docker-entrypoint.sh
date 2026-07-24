@@ -17,10 +17,10 @@ export SITE_URL CRM_WEBHOOK_URL GTM_ID BOOKING_URL LEAD_MAGNET_URL GA4_MEASUREME
 
 mkdir -p /data/db
 
-if ! wp core is-installed >/dev/null 2>&1; then
-	echo "[provision] first boot — installing WordPress on SQLite…"
-
-	if [ ! -f wp-config.php ]; then
+# 1) Ensure wp-config.php exists. It is regenerated deterministically (it points
+#    at the persisted SQLite DB on /data), so a fresh image layer after a rebuild
+#    reconnects to existing data instead of reinstalling.
+if [ ! -f wp-config.php ]; then
 		wp config create --dbname=braven --dbuser=root --dbpass= --skip-check --force --extra-php <<'PHP'
 // Behind kamal-proxy (TLS terminated at the edge): trust the forwarded proto.
 if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
@@ -37,11 +37,18 @@ define( 'AUTOMATIC_UPDATER_DISABLED', true );
 PHP
 	fi
 
-	# Install the SQLite drop-in (db.php) — replace the two placeholders.
+fi
+
+# 2) Ensure the SQLite drop-in (db.php) is present — replace the two placeholders.
+if [ ! -f wp-content/db.php ]; then
 	cp -f wp-content/plugins/sqlite-database-integration/db.copy wp-content/db.php
 	sed -i "s#{SQLITE_IMPLEMENTATION_FOLDER_PATH}#/var/www/html/wp-content/plugins/sqlite-database-integration#" wp-content/db.php
 	sed -i "s#{SQLITE_PLUGIN}#sqlite-database-integration/load.php#" wp-content/db.php
+fi
 
+# 3) Install + seed only when the (persisted) database has no install yet.
+if ! wp core is-installed >/dev/null 2>&1; then
+	echo "[provision] first boot — installing WordPress on SQLite…"
 	wp core install \
 		--url="$SITE_URL" \
 		--title="Braven Agency" \
@@ -58,10 +65,13 @@ PHP
 
 	wp eval-file /usr/local/bin/seed-pages.php || echo "[provision] seed step reported a non-fatal issue"
 	wp rewrite flush --hard || true
-
 	echo "[provision] done. wp-admin user: $ADMIN_USER  (${SITE_URL}/wp-admin/)"
 else
-	echo "[provision] existing install detected — starting server."
+	# Existing DB (e.g. after an image rebuild): make sure our code is active.
+	echo "[provision] existing install — ensuring plugins/theme active."
+	wp plugin activate sqlite-database-integration braven-lead-router >/dev/null 2>&1 || true
+	wp plugin activate elementor >/dev/null 2>&1 || true
+	wp theme activate braven-child >/dev/null 2>&1 || true
 fi
 
 exec frankenphp run --config /etc/caddy/Caddyfile
