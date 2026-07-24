@@ -1,0 +1,18 @@
+{
+	"key": "group_blr_video",
+	"title": "Training Video",
+	"fields": [
+		{ "key": "field_blr_video_url", "label": "Video URL", "name": "_blr_video_url", "type": "url",
+			"instructions": "Hosted clip (YouTube/Vimeo/Bunny). Leave blank to link to the on-site page." },
+		{ "key": "field_blr_video_duration", "label": "Duration", "name": "_blr_video_duration", "type": "text",
+			"instructions": "Display only, e.g. 8:15." }
+	],
+	"location": [ [ { "param": "post_type", "operator": "==", "value": "blr_video" } ] ],
+	"menu_order": 0,
+	"position": "normal",
+	"style": "default",
+	"label_placement": "top",
+	"active": true,
+	"description": "Track + Proficiency are taxonomies (blr_track / blr_proficiency) so terms stay indexed and filterable. Field names map onto the plugin's _blr_video_* meta keys.",
+	"modified": 1721692800
+}

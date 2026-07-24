@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Braven Lead Router — Build Documentation</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&family=Playfair+Display:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#c7945b; --gold-dk:#a87340; --tan:#ddb07c; --ink:#2a2b2b; --ink-soft:#6f6c67;
+  --cream:#ede8e0; --paper:#faf8f4; --line:#e3dccf; --code-bg:#2a2b2b; --code-fg:#f3ede2;
+  --ok:#2e7d32; --blue:#1e6fa8;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Nunito Sans',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:var(--paper);line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif;color:var(--ink);line-height:1.15;letter-spacing:-.01em}
+a{color:var(--gold-dk)}
+code,kbd,pre,.mono{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace}
+:not(pre)>code{background:#f0e9dd;color:#7a4a1e;padding:1.5px 6px;border-radius:5px;font-size:.86em}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:12px;padding:18px 20px;overflow-x:auto;font-size:13px;line-height:1.6;margin:14px 0;box-shadow:0 12px 30px -16px rgba(42,43,43,.5)}
+pre .c{color:#9a948a}/* comment */
+pre .k{color:#e0b07c}/* keyword */
+pre .s{color:#b5cf9a}/* string */
+pre .f{color:#8fc7e8}/* function/name */
+
+/* layout */
+.wrap{display:grid;grid-template-columns:262px minmax(0,1fr);max-width:1240px;margin:0 auto;gap:0}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:28px 20px 40px;border-right:1px solid var(--line);background:#fff}
+.side__brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.side__brand b{font-family:'Playfair Display',serif;font-size:18px}
+.side__tag{font-size:11.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-bottom:20px}
+.side nav a{display:block;color:var(--ink-soft);text-decoration:none;font-size:13.5px;font-weight:600;padding:5px 10px;border-radius:7px;border-left:2px solid transparent}
+.side nav a:hover{color:var(--ink);background:var(--paper)}
+.side nav a.h2{margin-top:14px;color:var(--ink);font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.main{padding:0 clamp(20px,4vw,64px) 90px;min-width:0}
+
+/* hero */
+.hero{padding:56px 0 30px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.eyebrow{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--gold-dk);background:var(--cream);padding:7px 15px;border-radius:999px;margin-bottom:16px}
+.hero h1{font-size:clamp(30px,5vw,46px);margin:0 0 12px;max-width:20ch}
+.hero p{font-size:18px;color:var(--ink-soft);max-width:62ch;margin:0 0 20px}
+.hero .links a{display:inline-block;margin-right:10px;margin-bottom:8px;font-weight:800;font-size:14px;text-decoration:none;padding:10px 18px;border-radius:999px}
+.btn-gold{background:var(--gold);color:#fff!important;box-shadow:0 8px 18px -8px rgba(199,148,91,.7)}
+.btn-ghost{border:1.5px solid var(--line);color:var(--ink)!important}
+
+section{padding:34px 0;border-bottom:1px solid var(--line)}
+section:last-child{border-bottom:0}
+section>h2{font-size:clamp(23px,3.4vw,30px);margin:0 0 6px;scroll-margin-top:18px}
+.lead{color:var(--ink-soft);font-size:16.5px;max-width:66ch;margin:0 0 18px}
+h3{font-size:19px;margin:26px 0 8px}
+h4{font-size:15.5px;margin:18px 0 6px;font-family:'Nunito Sans',sans-serif;font-weight:800}
+p,li{max-width:72ch}
+ul,ol{padding-left:22px}
+li{margin:5px 0}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:16px 0}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:0 1px 2px rgba(42,43,43,.03)}
+.card h4{margin-top:0;color:var(--gold-dk)}
+.card p{font-size:14px;color:var(--ink-soft);margin:0}
+
+.callout{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:14px 18px;margin:16px 0}
+.callout.ok{border-left-color:var(--ok)}
+.callout.info{border-left-color:var(--blue)}
+.callout b{color:var(--ink)}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--cream);font-weight:800;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink)}
+tr:last-child td{border-bottom:0}
+td code{white-space:nowrap}
+.scroll{overflow-x:auto}
+
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 9px;border-radius:999px;background:var(--cream);color:var(--gold-dk);text-transform:uppercase;letter-spacing:.03em}
+.tag-a{background:#f3e0cb;color:#8a4b12}
+.tag-b{background:#e7e0d2;color:#6f6c67}
+.tag-c{background:#eef1ea;color:#5b7150}
+
+/* flow diagram */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin:20px 0}
+.flow .node{flex:1 1 150px;min-width:130px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px;text-align:center;position:relative}
+.flow .node b{display:block;font-size:13.5px}
+.flow .node span{font-size:11.5px;color:var(--ink-soft)}
+.flow .node.hot{border-color:var(--gold);box-shadow:0 0 0 3px rgba(199,148,91,.12)}
+.arrow{align-self:center;color:var(--gold);font-weight:800;font-size:20px}
+.layer{display:grid;gap:8px;margin:16px 0}
+.layer .row{display:grid;grid-template-columns:130px 1fr;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.layer .row b{font-size:13px}
+.layer .row.pure b{color:var(--ok)} .layer .row.wp b{color:var(--blue)}
+.layer .row span{font-size:13.5px;color:var(--ink-soft)}
+.k{font-size:12px;color:var(--ink-soft)}
+.foot{padding:30px 0 0;color:var(--ink-soft);font-size:13.5px}
+@media(max-width:860px){.wrap{grid-template-columns:1fr}.side{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<aside class="side">
+  <div class="side__brand"><b>Braven Lead Router</b></div>
+  <div class="side__tag">Build Documentation · v1.0</div>
+  <nav>
+    <a class="h2" href="#overview">Overview</a>
+    <a href="#what">What it does</a>
+    <a href="#architecture">Architecture</a>
+    <a class="h2" href="#wp">Inside WordPress</a>
+    <a href="#files">Plugin file map</a>
+    <a href="#cpt">CPTs &amp; taxonomies</a>
+    <a href="#table">Custom table</a>
+    <a href="#acf">ACF Pro fields</a>
+    <a href="#rest">REST API</a>
+    <a href="#shortcode">Shortcode &amp; Elementor</a>
+    <a href="#admin">Admin surfaces</a>
+    <a href="#theme">Theme &amp; GTM</a>
+    <a class="h2" href="#engine">The engine</a>
+    <a href="#routing">Routing logic</a>
+    <a href="#funnel">Capture funnel</a>
+    <a href="#crm">CRM handoff</a>
+    <a href="#ga4">GA4 &amp; data layer</a>
+    <a class="h2" href="#tests">Screening tests</a>
+    <a href="#speed">Speed test</a>
+    <a href="#routetest">Routing test</a>
+    <a href="#a11y">Accessibility</a>
+    <a href="#perf">Performance</a>
+    <a class="h2" href="#ops">Operations</a>
+    <a href="#phase2">Phase 2 / AI hooks</a>
+    <a href="#install">Install on bravenagency.com</a>
+    <a href="#security">Security</a>
+  </nav>
+</aside>
+
+<main class="main">
+
+  <div class="hero">
+    <span class="eyebrow">Built for Braven Agency</span>
+    <h1>A self-select lead router, built the WordPress way.</h1>
+    <p>This documents a working proof-of-concept of Braven's Milestone&nbsp;1 deliverable — a
+      guided self-selection tool that routes cities, counties, chambers, and foundations to the
+      right next step, captures the lead cleanly, and pushes it to the CRM, an email workflow, and
+      GA4. It's a real WordPress plugin on your exact stack: WordPress&nbsp;+&nbsp;Elementor&nbsp;+&nbsp;custom
+      PHP (CPTs&nbsp;/&nbsp;ACF)&nbsp;+&nbsp;GTM/GA4&nbsp;+&nbsp;webhooks. No page-builder bloat.</p>
+    <div class="links">
+      <a class="btn-gold" href="https://braven-demo.levelbrook.com/">Open the live tool →</a>
+      <a class="btn-ghost" href="https://braven-demo.levelbrook.com/training-library/">Video library</a>
+      <a class="btn-ghost" href="https://braven-demo.levelbrook.com/wp-admin/">wp-admin</a>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <h2>Overview</h2>
+    <p class="lead">The brief was specific: not a strategist, not an AI-tool builder — a WordPress
+      engineer who ships a working, converting, fast lead-routing tool and can prove it. This build is
+      that tool, plus the tracking layer and the CPT-backed video repository, delivered as one cohesive,
+      dependency-light plugin.</p>
+
+    <div id="what"></div>
+    <h3>What the visitor experiences</h3>
+    <div class="flow">
+      <div class="node"><b>1 · Who are you?</b><span>City · County · Chamber · Foundation · Corporate</span></div>
+      <span class="arrow">→</span>
+      <div class="node"><b>2 · Your goal</b><span>AI · Digital Marketing · Social · Full program</span></div>
+      <span class="arrow">→</span>
+      <div class="node"><b>3 · Three qualifiers</b><span>Funding · Timeline · Role · Scale</span></div>
+      <span class="arrow">→</span>
+      <div class="node hot"><b>4 · Routed path</b><span>Book · Proposal · Funding · Nurture</span></div>
+    </div>
+    <p>Each answer feeds a transparent scoring engine. The visitor lands on a <b>tailored</b> view —
+      their organization type and goal reflected back, the right call-to-action, and only the form
+      fields that step actually needs. On submit, the lead is stored, sent to the CRM with retries,
+      emailed to the team, acknowledged to the prospect, and recorded in GA4.</p>
+
+    <div class="grid2">
+      <div class="card"><h4>Milestone 1 — the router</h4><p>The self-select flow, the scoring engine, and clean CRM + email capture. The primary deliverable.</p></div>
+      <div class="card"><h4>Milestone 2 — tracking</h4><p>GTM dataLayer events at every step + a redundant server-side GA4 conversion. Full-funnel measurability.</p></div>
+      <div class="card"><h4>Milestone 4 — video library</h4><p>A categorized, searchable training repository on CPTs + taxonomies. No directory plugin, no bloat.</p></div>
+      <div class="card"><h4>Phase 2 — AI hooks</h4><p>Clean action hooks, REST endpoints, and data structures so your AI team layers personalization in without a rebuild.</p></div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section id="architecture">
+    <h2>Architecture: a testable core, a thin WordPress skin</h2>
+    <p class="lead">The one decision that makes everything else clean: the <b>routing brain has no
+      WordPress dependency</b>. It's plain PHP that takes a selection and returns a decision. WordPress
+      — CPTs, REST, Elementor, the admin — is a thin adapter layer wrapped around it. That's why the
+      whole routing contract is unit-tested with <code>php tests/test-routing.php</code> (26 assertions,
+      zero WordPress boot) and why the logic is trivial to reason about.</p>
+
+    <div class="layer">
+      <div class="row pure"><b>PURE</b><span><code>class-blr-routing-engine.php</code> — score answers, pick a tier, resolve the outcome. The conditional logic.</span></div>
+      <div class="row pure"><b>PURE</b><span><code>class-blr-lead-validator.php</code> — sanitise + validate a submission (honeypot, consent, required fields).</span></div>
+      <div class="row pure"><b>PURE</b><span><code>class-blr-webhook-dispatcher.php</code> — build the CRM payload, sign it, retry, log. (One optional <code>wp_remote_post</code> seam, falls back to cURL.)</span></div>
+      <div class="row pure"><b>PURE</b><span><code>class-blr-ga4.php</code> — build + send the GA4 Measurement Protocol event.</span></div>
+      <div class="row wp"><b>WP</b><span><code>class-blr-cpt.php</code> · <code>-fields</code> · <code>-rest</code> · <code>-shortcode</code> · <code>-elementor-widget</code> · <code>-admin</code> · <code>-lead-repository</code> — bind the core to WordPress.</span></div>
+      <div class="row wp"><b>WP</b><span><code>class-blr-core.php</code> — the bootstrapper that wires it all on <code>plugins_loaded</code>.</span></div>
+    </div>
+
+    <div class="callout ok"><b>Why it matters to you:</b> when a marketer wants a new buyer type or a
+      re-pointed destination, they edit <code>data/routes.php</code> — a declarative matrix — and nothing
+      in the engine changes. When an engineer wants to verify a change, the tests run in a second with no
+      database. New buyer segments, new scoring, new outcomes: config edits, not rebuilds.</div>
+  </section>
+
+  <!-- INSIDE WORDPRESS -->
+  <section id="wp">
+    <h2>How the custom code fits inside a standard WordPress install</h2>
+    <p class="lead">Everything below is stock WordPress — no forks, no core hacks, no exotic
+      dependencies. It's a single plugin folder in <code>wp-content/plugins/</code> plus a child theme.
+      Drop it into any WordPress 6.4+ site and activate.</p>
+
+    <div id="files"></div>
+    <h3>The plugin folder</h3>
+    <div class="scroll"><pre><span class="c">wp-content/plugins/braven-lead-router/</span>
+  braven-lead-router.php        <span class="c"># plugin header, constants, activation hooks</span>
+  includes/
+    class-blr-routing-engine.php <span class="c"># PURE — the decision brain</span>
+    class-blr-lead-validator.php <span class="c"># PURE — sanitise + validate</span>
+    class-blr-webhook-dispatcher.php <span class="c"># PURE* — CRM webhook, retries, HMAC</span>
+    class-blr-ga4.php            <span class="c"># PURE — server-side GA4 Measurement Protocol</span>
+    class-blr-email-workflow.php <span class="c"># wp_mail + blr_lead_captured hook</span>
+    class-blr-lead-repository.php <span class="c"># persist a lead as the blr_lead CPT</span>
+    class-blr-cpt.php            <span class="c"># register CPTs + taxonomies + custom table</span>
+    class-blr-fields.php         <span class="c"># register_post_meta + ACF integration</span>
+    class-blr-rest.php           <span class="c"># register_rest_route — /braven/v1/*</span>
+    class-blr-shortcode.php      <span class="c"># [braven_lead_router], [braven_video_library]</span>
+    class-blr-elementor-widget.php <span class="c"># the same tool as an Elementor block</span>
+    class-blr-admin.php          <span class="c"># columns, meta box, Routing Console, Settings</span>
+    class-blr-core.php           <span class="c"># bootstrapper</span>
+    helpers.php
+  data/routes.php                <span class="c"># the routing matrix (editable config)</span>
+  data/videos.php                <span class="c"># seed catalog for the library</span>
+  templates/                     <span class="c"># server-rendered markup</span>
+  assets/css · assets/js         <span class="c"># ~6KB CSS, ~7KB JS, no jQuery</span>
+  acf-json/                      <span class="c"># ACF Pro field-group exports</span>
+  readme.txt · uninstall.php</pre></div>
+    <p>The mapping from "custom features" to "standard WordPress primitives" is one-to-one:</p>
+    <div class="scroll"><table>
+      <tr><th>Feature</th><th>WordPress primitive</th><th>Where</th></tr>
+      <tr><td>Captured leads</td><td>Custom Post Type <code>blr_lead</code> + post meta</td><td>class-blr-cpt / -lead-repository</td></tr>
+      <tr><td>Training videos</td><td>CPT <code>blr_video</code> + taxonomies <code>blr_track</code>, <code>blr_proficiency</code></td><td>class-blr-cpt</td></tr>
+      <tr><td>CRM delivery log</td><td>Custom table via <code>dbDelta()</code></td><td>class-blr-cpt</td></tr>
+      <tr><td>Editable lead fields</td><td>ACF Pro field group (or native meta box fallback)</td><td>acf-json / class-blr-admin</td></tr>
+      <tr><td>Wizard &amp; capture API</td><td><code>register_rest_route()</code></td><td>class-blr-rest</td></tr>
+      <tr><td>Placement on a page</td><td>Shortcode <em>and</em> Elementor widget</td><td>class-blr-shortcode / -elementor-widget</td></tr>
+      <tr><td>Operator console</td><td>Admin submenu + custom list columns</td><td>class-blr-admin</td></tr>
+      <tr><td>Tracking</td><td><code>wp_head</code> dataLayer + wp_remote_post to GA4</td><td>class-blr-core / -ga4</td></tr>
+      <tr><td>Extensibility</td><td>Action hook <code>blr_lead_captured</code></td><td>class-blr-email-workflow</td></tr>
+    </table></div>
+
+    <!-- CPT -->
+    <div id="cpt"></div>
+    <h3>Custom Post Types &amp; taxonomies</h3>
+    <p>Leads and videos are Custom Post Types — the idiomatic WordPress way to get an admin UI,
+      search, capabilities, REST, and (crucially for your stack) <b>ACF Pro compatibility</b> for free.
+      Videos add two hierarchical taxonomies so terms stay indexed and filterable.</p>
+    <div class="scroll"><pre><span class="k">register_post_type</span>( <span class="s">'blr_lead'</span>, [
+  <span class="s">'public'</span> =&gt; <span class="k">false</span>,        <span class="c">// leads are private — never a public URL</span>
+  <span class="s">'show_ui'</span> =&gt; <span class="k">true</span>,        <span class="c">// but fully manageable in wp-admin</span>
+  <span class="s">'show_in_rest'</span> =&gt; <span class="k">false</span>,  <span class="c">// PII never exposed over public REST</span>
+  <span class="s">'supports'</span> =&gt; [ <span class="s">'title'</span> ],
+] );
+
+<span class="k">register_taxonomy</span>( <span class="s">'blr_track'</span>, <span class="s">'blr_video'</span>, [ <span class="s">'hierarchical'</span> =&gt; <span class="k">true</span>, <span class="s">'show_admin_column'</span> =&gt; <span class="k">true</span> ] );
+<span class="k">register_taxonomy</span>( <span class="s">'blr_proficiency'</span>, <span class="s">'blr_video'</span>, [ <span class="s">'hierarchical'</span> =&gt; <span class="k">true</span>, <span class="s">'show_admin_column'</span> =&gt; <span class="k">true</span> ] );</pre></div>
+
+    <!-- TABLE -->
+    <div id="table"></div>
+    <h3>A custom table — where a CPT is the wrong tool</h3>
+    <p>Leads are a CPT; the <b>webhook delivery log</b> is not. It's high-volume, append-only audit
+      data — one row per CRM send attempt — so it lives in a real table created with <code>dbDelta()</code>
+      on activation. Right tool per job; this is the "custom database structures" the Build Test asks about.</p>
+    <div class="scroll"><pre><span class="k">CREATE TABLE</span> {$wpdb-&gt;prefix}blr_deliveries (
+  id BIGINT UNSIGNED <span class="k">AUTO_INCREMENT</span>,
+  lead_id BIGINT UNSIGNED, idem_key VARCHAR(64),
+  attempt SMALLINT, http_status SMALLINT,
+  result VARCHAR(20), message VARCHAR(255),
+  created_at DATETIME <span class="k">DEFAULT</span> CURRENT_TIMESTAMP,
+  <span class="k">PRIMARY KEY</span> (id), <span class="k">KEY</span> lead_id (lead_id), <span class="k">KEY</span> idem_key (idem_key)
+);</pre></div>
+
+    <!-- ACF -->
+    <div id="acf"></div>
+    <h3>ACF Pro — a first-class citizen, never a hard dependency</h3>
+    <p>The plugin works with or without ACF. Without it, meta is registered and typed via
+      <code>register_post_meta()</code> and the admin renders a native read-only panel. With ACF Pro
+      active — your stack — the shipped field groups in <code>acf-json/</code> take over the editing UI,
+      bound to the <b>same</b> <code>_blr_*</code> meta keys the engine already reads. Zero migration: ACF
+      simply upgrades the interface.</p>
+    <div class="scroll"><pre><span class="c">// class-blr-fields.php — point ACF's loader at our shipped field groups</span>
+<span class="k">add_filter</span>( <span class="s">'acf/settings/load_json'</span>, <span class="k">function</span>( $paths ){ $paths[] = BLR_DIR . <span class="s">'acf-json'</span>; <span class="k">return</span> $paths; } );</pre></div>
+    <p>Two groups ship: <code>group_blr_lead.json</code> (name, org, email, phone, buyer type, track,
+      intent tier/score, outcome, CRM status) and <code>group_blr_video.json</code> (video URL, duration).</p>
+
+    <!-- REST -->
+    <div id="rest"></div>
+    <h3>REST API</h3>
+    <p>The wizard talks to three endpoints under the <code>braven/v1</code> namespace. Routing is
+      separated from capture so the tailored view can render (and fire the routed dataLayer event)
+      <em>before</em> asking for a single piece of PII — lower friction, and it lets you A/B the routed
+      copy without resubmitting contact details.</p>
+    <div class="scroll"><table>
+      <tr><th>Endpoint</th><th>Method</th><th>Purpose</th><th>Auth</th></tr>
+      <tr><td><code>/braven/v1/config</code></td><td>GET</td><td>buyer types, tracks, qualifiers</td><td>public (no PII)</td></tr>
+      <tr><td><code>/braven/v1/route</code></td><td>POST</td><td>selection → routing decision</td><td>public (no PII)</td></tr>
+      <tr><td><code>/braven/v1/lead</code></td><td>POST</td><td>capture: CPT + CRM + email + GA4</td><td>REST nonce + honeypot</td></tr>
+    </table></div>
+    <div class="scroll"><pre><span class="k">register_rest_route</span>( <span class="s">'braven/v1'</span>, <span class="s">'/lead'</span>, [
+  <span class="s">'methods'</span> =&gt; <span class="s">'POST'</span>,
+  <span class="s">'callback'</span> =&gt; [ <span class="s">'BLR_REST'</span>, <span class="s">'post_lead'</span> ],
+  <span class="s">'permission_callback'</span> =&gt; <span class="s">'__return_true'</span>, <span class="c">// gated inside by nonce + honeypot</span>
+] );</pre></div>
+    <div class="callout"><b>Never trust the client.</b> On capture the server <em>recomputes</em> the routing
+      decision from the raw selection — the browser's claimed outcome is ignored — then validates, persists,
+      and fans out. The client is a convenience, not an authority.</div>
+
+    <!-- SHORTCODE -->
+    <div id="shortcode"></div>
+    <h3>Shortcode <em>and</em> Elementor — one renderer</h3>
+    <p>The job spec's exact principle: keep the deep logic in custom PHP; keep Elementor clean and
+      usable for marketers. So there is one renderer, exposed two ways. Marketers drag the
+      <b>“Braven Lead Router”</b> widget onto any Elementor page (with heading/intro controls); developers
+      or a classic page use <code>[braven_lead_router]</code>. The Elementor widget carries <b>no logic</b> —
+      it calls the shortcode renderer.</p>
+    <div class="scroll"><pre><span class="c">// class-blr-elementor-widget.php — the widget is a thin wrapper</span>
+<span class="k">protected function</span> <span class="f">render</span>() {
+  $s = $this-&gt;get_settings_for_display();
+  <span class="k">echo</span> <span class="f">BLR_Shortcode::render_router</span>( [ <span class="s">'heading'</span> =&gt; $s[<span class="s">'heading'</span>], <span class="s">'intro'</span> =&gt; $s[<span class="s">'intro'</span>] ] );
+}</pre></div>
+    <p>Assets enqueue <b>only</b> on pages that actually contain the tool — nothing loads site-wide.</p>
+
+    <!-- ADMIN -->
+    <div id="admin"></div>
+    <h3>Admin surfaces</h3>
+    <ul>
+      <li><b>Partner Leads</b> — the <code>blr_lead</code> list with custom columns: buyer type, track,
+        intent tier + score, and a colour-coded CRM status badge. Triage from the list without opening a record.</li>
+      <li><b>Routing Console</b> — a dashboard page: leads by intent tier + the live CRM webhook delivery log.</li>
+      <li><b>Settings</b> — CRM webhook URL &amp; secret, GA4 Measurement ID + API secret, GTM container ID,
+        booking URL, lead-magnet URL, notification email. No code edits to reconfigure.</li>
+    </ul>
+
+    <!-- THEME -->
+    <div id="theme"></div>
+    <h3>Theme &amp; GTM</h3>
+    <p>Presentation is a <code>hello-elementor</code> <b>child theme</b> — your live theme — that loads
+      Braven's fonts (Nunito Sans + Playfair Display) and palette (gold <code>#c7945b</code>, warm ink,
+      cream). GTM is printed into <code>wp_head</code> only when a container ID is set, seeding the same
+      <code>dataLayer</code> the wizard pushes to. On your site you'd set the ID to your existing
+      <code>GTM-535B5NR</code> container and the events flow straight in.</p>
+  </section>
+
+  <!-- ENGINE -->
+  <section id="engine">
+    <h2>The engine</h2>
+
+    <div id="routing"></div>
+    <h3>Routing logic — transparent and auditable</h3>
+    <p>The screening question is: <em>walk us through the conditional logic.</em> Here it is in full.
+      Every qualifier answer carries a score. The sum, plus a small weight for higher-value segments,
+      places the lead in a tier. A short, ordered rule list turns (buyer type, tier, funding posture)
+      into an outcome — first match wins, with a safe default so no lead is ever dropped.</p>
+
+    <h4>1 · Score the answers</h4>
+    <div class="scroll"><table>
+      <tr><th>Qualifier</th><th>Answers → points</th></tr>
+      <tr><td>Funding</td><td>Funded&nbsp;<b>40</b> · Budgeted&nbsp;<b>25</b> · Seeking&nbsp;<b>10</b> · Exploring&nbsp;<b>0</b></td></tr>
+      <tr><td>Timeline</td><td>This quarter&nbsp;<b>30</b> · 6 months&nbsp;<b>20</b> · This year&nbsp;<b>10</b> · Unsure&nbsp;<b>0</b></td></tr>
+      <tr><td>Role</td><td>Approves budget&nbsp;<b>20</b> · Recommends&nbsp;<b>12</b> · Researching&nbsp;<b>4</b></td></tr>
+      <tr><td>Scale</td><td>500+&nbsp;<b>20</b> · 100–500&nbsp;<b>14</b> · 25–100&nbsp;<b>8</b> · &lt;25&nbsp;<b>3</b></td></tr>
+      <tr><td>Segment weight</td><td>City/County/Foundation&nbsp;<b>+10</b> · Chamber/Corporate&nbsp;<b>+5</b></td></tr>
+    </table></div>
+
+    <h4>2 · Map score → tier</h4>
+    <p><span class="pill tag-a">Tier A · High intent</span> ≥ 70 &nbsp;
+       <span class="pill tag-b">Tier B · Qualified</span> 35–69 &nbsp;
+       <span class="pill tag-c">Tier C · Nurture</span> &lt; 35</p>
+
+    <h4>3 · Resolve the outcome (first match wins)</h4>
+    <div class="scroll"><table>
+      <tr><th>#</th><th>Condition</th><th>Outcome</th><th>Next step</th></tr>
+      <tr><td>1</td><td>Foundation + funding = seeking/exploring</td><td><b>Funding partnership</b></td><td>Funding intake + playbook</td></tr>
+      <tr><td>2</td><td>Tier A</td><td><b>Book a call</b></td><td>Booking link + short confirm form</td></tr>
+      <tr><td>3</td><td>Tier B</td><td><b>Request a proposal</b></td><td>Fuller intake (adds goals)</td></tr>
+      <tr><td>4</td><td>Tier C (default)</td><td><b>Nurture</b></td><td>Program overview + newsletter</td></tr>
+    </table></div>
+    <p>The decision also attaches <b>tailored copy</b> — the buyer type's value proposition and the track
+      label — so the routed view is never a generic form. Example decisions from the test suite: a funded,
+      decision-making city training 500+ businesses (score 120) → <b>Book a call</b>; a budgeted county
+      recommender (score 60) → <b>Request a proposal</b>; an exploring chamber (score 12) → <b>Nurture</b>;
+      a foundation seeking funding → <b>Funding partnership</b> (the special rule beats the tier).</p>
+    <div class="scroll"><pre><span class="c">// data/routes.php — outcomes are config, not code</span>
+<span class="s">'rules'</span> =&gt; [
+  [ <span class="s">'when'</span> =&gt; [ <span class="s">'buyer_type_in'</span> =&gt; [<span class="s">'foundation'</span>], <span class="s">'funding_in'</span> =&gt; [<span class="s">'seeking'</span>,<span class="s">'exploring'</span>] ], <span class="s">'outcome'</span> =&gt; <span class="s">'funding_partnership'</span> ],
+  [ <span class="s">'when'</span> =&gt; [ <span class="s">'tier'</span> =&gt; <span class="s">'A'</span> ], <span class="s">'outcome'</span> =&gt; <span class="s">'book_call'</span> ],
+  [ <span class="s">'when'</span> =&gt; [ <span class="s">'tier'</span> =&gt; <span class="s">'B'</span> ], <span class="s">'outcome'</span> =&gt; <span class="s">'request_proposal'</span> ],
+  [ <span class="s">'when'</span> =&gt; [ <span class="s">'tier'</span> =&gt; <span class="s">'C'</span> ], <span class="s">'outcome'</span> =&gt; <span class="s">'nurture'</span> ],
+],</pre></div>
+
+    <!-- FUNNEL -->
+    <div id="funnel"></div>
+    <h3>The capture funnel</h3>
+    <p>One POST to <code>/braven/v1/lead</code> fires the whole funnel, in order:</p>
+    <div class="flow">
+      <div class="node"><b>Validate</b><span>sanitise · honeypot · consent · recompute decision</span></div><span class="arrow">→</span>
+      <div class="node"><b>Persist</b><span>blr_lead CPT + meta (dedup by idem key)</span></div><span class="arrow">→</span>
+      <div class="node"><b>CRM</b><span>webhook + retries + log</span></div><span class="arrow">→</span>
+      <div class="node"><b>Email</b><span>team alert + prospect reply + hook</span></div><span class="arrow">→</span>
+      <div class="node hot"><b>GA4</b><span>server-side generate_lead</span></div>
+    </div>
+    <p>Each stage degrades safely: a failed email never fails capture; an unconfigured CRM is recorded,
+      not thrown. The lead is captured no matter what downstream does.</p>
+
+    <!-- CRM -->
+    <div id="crm"></div>
+    <h3>CRM handoff — Smrts-shaped, idempotent, retried</h3>
+    <p>The lead POSTs to a configurable webhook — your <b>Smrts CRM</b> inbound hook, or a Zapier/Make
+      catch-hook. The payload is CRM-neutral and signed; delivery is idempotent and retried; every attempt
+      is logged to the custom table and surfaced in the Routing Console.</p>
+    <h4>Payload → Smrts field mapping</h4>
+    <div class="scroll"><table>
+      <tr><th>Payload path</th><th>Meaning</th><th>Maps to (Smrts / CRM)</th></tr>
+      <tr><td><code>contact.email</code>, <code>.name</code>, <code>.phone</code>, <code>.organization</code>, <code>.title</code></td><td>Contact identity</td><td>Contact/Lead record fields</td></tr>
+      <tr><td><code>segmentation.buyer_type</code></td><td>city / county / chamber / foundation / corporate</td><td>Lead source segment / list</td></tr>
+      <tr><td><code>segmentation.track</code></td><td>Program interest</td><td>Interest / campaign tag</td></tr>
+      <tr><td><code>segmentation.intent_tier</code> + <code>intent_score</code></td><td>A / B / C + numeric</td><td>Lead score / priority</td></tr>
+      <tr><td><code>segmentation.outcome</code></td><td>Routed next step</td><td>Pipeline stage / workflow trigger</td></tr>
+      <tr><td><code>attribution</code></td><td>UTM + gclid</td><td>Source attribution fields</td></tr>
+      <tr><td><code>idempotency_key</code></td><td>Stable per submission</td><td>De-dupe key (upsert)</td></tr>
+    </table></div>
+    <h4>Reliability</h4>
+    <ul>
+      <li><b>Idempotency</b> — every payload carries a 32-char key (also an <code>X-Braven-Idempotency</code>
+        header), so a double-fired form or a retry collapses to one CRM record. The <code>blr_lead</code> CPT
+        dedupes on the same key.</li>
+      <li><b>Signing</b> — if a secret is set, the body is HMAC-SHA256 signed as
+        <code>X-Braven-Signature</code>, so the CRM can verify authenticity.</li>
+      <li><b>Retries</b> — transient failures (timeouts, 5xx, 429) retry with a short backoff; 4xx are
+        terminal. Every attempt is logged with its HTTP status and result.</li>
+    </ul>
+    <div class="callout info"><b>In this demo</b> the webhook points at a local mock sink so you can see
+      real <code>delivered</code> rows in the Routing Console end-to-end. In production you paste the Smrts
+      inbound URL into Settings and delete the mock — no code change.</div>
+
+    <!-- GA4 -->
+    <div id="ga4"></div>
+    <h3>GA4 &amp; the data layer</h3>
+    <p>Two layers of measurement. The <b>client</b> pushes a clean event to <code>dataLayer</code> at every
+      funnel step for GTM to pick up. The <b>server</b> independently fires the money event
+      (<code>generate_lead</code>) via the GA4 Measurement Protocol on capture — so a conversion is recorded
+      even when an ad-blocker or a bounce kills the client beacon. That server-side redundancy is the
+      "server-side tagging a plus" line in your spec.</p>
+    <h4>Client dataLayer events (wire these to GTM tags/triggers)</h4>
+    <div class="scroll"><table>
+      <tr><th>Event</th><th>When</th><th>Key parameters</th></tr>
+      <tr><td><code>blr_router_start</code></td><td>Tool loads</td><td>—</td></tr>
+      <tr><td><code>blr_buyer_type_selected</code></td><td>Step 1 chosen</td><td><code>buyer_type</code></td></tr>
+      <tr><td><code>blr_track_selected</code></td><td>Step 2 chosen</td><td><code>track</code></td></tr>
+      <tr><td><code>blr_qualifiers_answered</code></td><td>Step 3 complete</td><td><code>answers</code></td></tr>
+      <tr><td><code>blr_lead_routed</code></td><td>Routed view shown</td><td><code>buyer_type, track, intent_tier, outcome</code></td></tr>
+      <tr><td><code>blr_lead_submitted</code></td><td>Capture succeeds</td><td><code>intent_tier, outcome, lead_id</code></td></tr>
+    </table></div>
+    <p>The GA client id is read from the <code>_ga</code> cookie and passed to the server event, so the
+      server-side conversion stitches to the same session in GA4. Recommended GTM setup: a GA4 Event tag per
+      dataLayer event, keyed on a Custom Event trigger of the same name; map <code>buyer_type</code>,
+      <code>track</code>, <code>intent_tier</code>, and <code>outcome</code> to registered GA4 custom
+      dimensions.</p>
+  </section>
+
+  <!-- SCREENING TESTS -->
+  <section id="tests">
+    <h2>Your three screening tests, answered</h2>
+
+    <div id="speed"></div>
+    <h3>Speed Test — a searchable video library without tanking page load</h3>
+    <p>My answer, and what this build does: <b>do not reach for a directory plugin.</b> Model videos as a
+      <code>blr_video</code> CPT with two taxonomies (<code>blr_track</code>, <code>blr_proficiency</code>).
+      Terms are indexed; one cached <code>WP_Query</code> renders every card into static-friendly markup on
+      the server. Filtering is then <b>pure client-side show/hide</b> — no AJAX, no per-keystroke query, no
+      round-trips. Search debounces over text already in the DOM.</p>
+    <p>How I hold PageSpeed &gt; 90, concretely — by removing weight, not adding plugins:</p>
+    <ul>
+      <li>Assets enqueue only where the tool/library is used (~6KB CSS + ~7KB JS, no jQuery, deferred).</li>
+      <li>The routing matrix is OPcache'd PHP config — no DB hit on the hot path.</li>
+      <li>Server-rendered markup means first paint doesn't wait on JavaScript.</li>
+      <li>Fonts preconnect + <code>display=swap</code>; images lazy-load; SVG icons inline (no icon font).</li>
+      <li>Elementor stays lean — it only loads its runtime on pages actually built with it, and the tool
+        pages are shortcode/widget-rendered.</li>
+    </ul>
+
+    <div id="routetest"></div>
+    <h3>Routing Test — the conditional logic, form→CRM, and GA4</h3>
+    <p>Covered in full above: the <a href="#routing">scoring &amp; rules</a> are a declarative matrix with a
+      first-match resolver and a safe default; the <a href="#crm">form→CRM handoff</a> is an idempotent,
+      signed, retried webhook with a Smrts field map; each step's <a href="#ga4">data pushes cleanly into
+      GA4</a> client-side, with a redundant server-side conversion. The server always recomputes the decision
+      — the client never dictates the outcome.</p>
+
+    <div id="a11y"></div>
+    <h3>Accessibility — WCAG 2.1 AA for civic buyers</h3>
+    <p>Your audiences are government and institutional, so accessible builds are non-negotiable. Built in
+      from the start, not bolted on:</p>
+    <ul>
+      <li>Each question is a <code>&lt;fieldset&gt;</code> with a <code>&lt;legend&gt;</code>; options are
+        real <code>&lt;input type="radio"&gt;</code> controls inside a <code>role="radiogroup"</code> — fully
+        keyboard operable, correctly announced by screen readers.</li>
+      <li>Visible focus states on every control (never <code>outline:none</code> without a replacement).</li>
+      <li>Step changes move focus to the new step and are announced via an <code>aria-live</code> region;
+        errors are announced too.</li>
+      <li>Colour contrast meets AA (ink on paper, white on gold verified); state is never colour-only.</li>
+      <li>The wizard is server-rendered, so the questions exist without JavaScript; a <code>&lt;noscript&gt;</code>
+        fallback offers a phone number.</li>
+      <li><code>prefers-reduced-motion</code> disables the shake/entrance animations.</li>
+    </ul>
+
+    <div id="perf"></div>
+    <h3>Performance summary</h3>
+    <div class="grid2">
+      <div class="card"><h4>No framework</h4><p>Vanilla JS + PHP. No jQuery, no React, no build step for the front-end.</p></div>
+      <div class="card"><h4>Conditional assets</h4><p>CSS/JS load only on pages with the tool. The rest of the site is untouched.</p></div>
+      <div class="card"><h4>SQLite-friendly</h4><p>The demo runs WordPress on SQLite — the whole thing is one container, no MySQL.</p></div>
+      <div class="card"><h4>Cached &amp; indexed</h4><p>Config is OPcache'd PHP; taxonomy queries are cached; the library filters in-browser.</p></div>
+    </div>
+  </section>
+
+  <!-- OPS -->
+  <section id="ops">
+    <h2>Operations</h2>
+
+    <div id="phase2"></div>
+    <h3>Phase 2 — clean seams for your AI team</h3>
+    <p>The spec is explicit: your AI team owns the generative logic; I architect the hooks so it plugs in
+      without a rebuild. The seams are already here:</p>
+    <ul>
+      <li><b>Action hook</b> — <code>do_action( 'blr_lead_captured', $lead, $decision, $lead_id )</code> fires
+        on every qualified lead. An AI feature (e.g. generate a custom syllabus) subscribes to it with zero
+        changes to this plugin.</li>
+      <li><b>REST</b> — the <code>braven/v1</code> namespace is the natural home for a gated
+        <code>/syllabus</code> or <code>/worksheet</code> endpoint that reads the same lead data structures.</li>
+      <li><b>Typed data</b> — buyer type, track, tier, and answers are stored as structured meta, so a
+        personalization layer has clean inputs to condition on.</li>
+    </ul>
+
+    <div id="install"></div>
+    <h3>Installing on bravenagency.com</h3>
+    <ol>
+      <li>Upload <code>braven-lead-router</code> to <code>wp-content/plugins/</code> and activate. (Activation
+        registers the CPTs, creates the delivery table, and seeds the library.)</li>
+      <li><b>Partner Leads → Settings:</b> paste your Smrts CRM webhook URL (+ optional secret), GA4
+        Measurement ID + API secret, GTM ID (<code>GTM-535B5NR</code>), booking URL, and lead-magnet URL.</li>
+      <li>Add the tool to any page: drop the <b>Braven Lead Router</b> Elementor widget, or use
+        <code>[braven_lead_router]</code>. Add <code>[braven_video_library]</code> for the library.</li>
+      <li>ACF Pro is auto-detected; the shipped field groups appear on the Lead and Video editors — no import
+        needed (they load from <code>acf-json/</code>).</li>
+      <li>Point the child theme at your live fonts/logo if different; nothing else to configure.</li>
+    </ol>
+    <div class="callout ok">Because leads are a CPT and the webhook is idempotent, you can install alongside
+      your existing forms and cut traffic over gradually — no big-bang migration.</div>
+
+    <div id="security"></div>
+    <h3>Security</h3>
+    <ul>
+      <li><b>CSRF</b> — the capture endpoint requires a valid WordPress REST nonce.</li>
+      <li><b>Spam</b> — a hidden honeypot field; bots that fill it get a silent 200 and nothing is stored.</li>
+      <li><b>Input</b> — every field is sanitised at one choke point; email is validated; output is escaped.</li>
+      <li><b>Privacy</b> — leads are a private CPT with <code>show_in_rest =&gt; false</code>; PII is never
+        exposed over public REST. Meta auth callbacks require <code>edit_posts</code>.</li>
+      <li><b>Webhook integrity</b> — optional HMAC-SHA256 signature so the CRM can verify each payload.</li>
+    </ul>
+
+    <div class="foot">
+      <p>Built as a working reference for Braven Agency · Levelbrook · Source and tests included ·
+        <a href="https://braven-demo.levelbrook.com/">Live demo</a></p>
+    </div>
+  </section>
+</main>
+</div>
+</body>
+</html>

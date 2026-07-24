@@ -1,0 +1,45 @@
+/* Braven Child — page-level brand styling for the demo (Hello Elementor base). */
+
+:root {
+	--braven-gold: #c7945b;
+	--braven-gold-dk: #a87340;
+	--braven-ink: #2a2b2b;
+	--braven-ink-soft: #6f6c67;
+	--braven-cream: #ede8e0;
+	--braven-paper: #faf8f4;
+	--braven-line: #e3dccf;
+}
+
+body {
+	font-family: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	color: var(--braven-ink);
+	background: var(--braven-paper);
+	-webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { font-family: 'Playfair Display', Georgia, serif; color: var(--braven-ink); }
+a { color: var(--braven-gold-dk); }
+
+/* Hello Elementor header/site */
+.site-header, header.site-header { background: #fff; border-bottom: 1px solid var(--braven-line); }
+.site-header .site-branding img, .site-header img.custom-logo { max-height: 46px; width: auto; }
+.site-title a { color: var(--braven-ink); text-decoration: none; font-family: 'Playfair Display', serif; }
+.site-navigation a { color: var(--braven-ink); font-weight: 700; }
+
+/* generous content column */
+.hello-elementor .page-content, .site-main, .entry-content { max-width: 1120px; margin-left: auto; margin-right: auto; padding-left: 20px; padding-right: 20px; }
+.entry-content { padding-top: 8px; padding-bottom: 48px; }
+
+/* Demo hero (seeded into page content) */
+.braven-hero { text-align: center; padding: 46px 20px 30px; }
+.braven-hero__eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--braven-gold-dk); background: var(--braven-cream); padding: 7px 16px; border-radius: 999px; margin-bottom: 16px; }
+.braven-hero h1 { font-size: clamp(30px, 6vw, 52px); line-height: 1.08; margin: 0 auto 14px; max-width: 18ch; letter-spacing: -.01em; }
+.braven-hero p { font-size: clamp(16px, 2.4vw, 19px); color: var(--braven-ink-soft); max-width: 56ch; margin: 0 auto; line-height: 1.5; }
+.braven-hero__certs { margin-top: 18px; font-size: 12.5px; font-weight: 700; letter-spacing: .06em; color: var(--braven-ink-soft); text-transform: uppercase; }
+
+/* demo notice ribbon */
+.braven-demo-note { background: var(--braven-ink); color: #fff; text-align: center; font-size: 13px; padding: 9px 16px; }
+.braven-demo-note a { color: var(--braven-gold); font-weight: 700; }
+
+/* simple footer */
+.site-footer { background: var(--braven-ink); color: #cfc9c0; text-align: center; padding: 26px 16px; font-size: 13.5px; }
+.site-footer a { color: var(--braven-gold); }

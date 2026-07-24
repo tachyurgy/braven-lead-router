@@ -1,0 +1,7 @@
+.git
+.gitignore
+*.md
+RELEASES.md
+tests
+node_modules
+.DS_Store

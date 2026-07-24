@@ -1,0 +1,29 @@
+{
+	frankenphp
+	# kamal-proxy terminates TLS at the edge; this container speaks plain HTTP.
+	auto_https off
+	# Keep the admin banner quiet.
+	admin off
+}
+
+:80 {
+	root * /var/www/html
+	encode zstd gzip
+
+	# kamal-proxy health check. It sends "Host: <container-id>" (no dots), so /up
+	# must answer regardless of Host and without touching WordPress/the DB.
+	@up path /up
+	handle @up {
+		respond "ok" 200
+	}
+
+	# Static build documentation, served straight from disk (no WP round-trip).
+	handle /docs* {
+		file_server
+	}
+
+	# WordPress (pretty permalinks handled by php_server's try_files).
+	handle {
+		php_server
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"key": "group_blr_lead",
+	"title": "Partner Lead",
+	"fields": [
+		{ "key": "field_blr_name", "label": "Name", "name": "_blr_name", "type": "text" },
+		{ "key": "field_blr_organization", "label": "Organization", "name": "_blr_organization", "type": "text" },
+		{ "key": "field_blr_title", "label": "Title", "name": "_blr_title", "type": "text" },
+		{ "key": "field_blr_email", "label": "Email", "name": "_blr_email", "type": "email" },
+		{ "key": "field_blr_phone", "label": "Phone", "name": "_blr_phone", "type": "text" },
+		{ "key": "field_blr_goals", "label": "Goals", "name": "_blr_goals", "type": "textarea" },
+		{ "key": "field_blr_buyer_type", "label": "Buyer type", "name": "_blr_buyer_type", "type": "select",
+			"choices": { "city": "City", "county": "County", "chamber": "Chamber / Business Org", "foundation": "Foundation / Funder", "corporate": "Corporate / Employer" } },
+		{ "key": "field_blr_track", "label": "Track", "name": "_blr_track", "type": "select",
+			"choices": { "ai": "AI Enablement & Resilience", "digital_marketing": "Digital Marketing", "social_media": "Social Media", "full_program": "Full Program" } },
+		{ "key": "field_blr_intent_tier", "label": "Intent tier", "name": "_blr_intent_tier", "type": "select",
+			"choices": { "A": "A — High intent", "B": "B — Qualified", "C": "C — Nurture" } },
+		{ "key": "field_blr_intent_score", "label": "Intent score", "name": "_blr_intent_score", "type": "number" },
+		{ "key": "field_blr_outcome", "label": "Routed outcome", "name": "_blr_outcome", "type": "text" },
+		{ "key": "field_blr_crm_status", "label": "CRM status", "name": "_blr_crm_status", "type": "text", "readonly": 1 },
+		{ "key": "field_blr_source", "label": "Source", "name": "_blr_source", "type": "text", "readonly": 1 },
+		{ "key": "field_blr_page_url", "label": "Page URL", "name": "_blr_page_url", "type": "url", "readonly": 1 }
+	],
+	"location": [ [ { "param": "post_type", "operator": "==", "value": "blr_lead" } ] ],
+	"menu_order": 0,
+	"position": "normal",
+	"style": "default",
+	"label_placement": "left",
+	"active": true,
+	"description": "Auto-populated by the Braven Lead Router plugin. Field names map 1:1 onto the plugin's _blr_* meta keys, so enabling ACF Pro simply upgrades the editing UI — no data migration.",
+	"modified": 1721692800
+}
