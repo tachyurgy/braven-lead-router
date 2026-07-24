@@ -8,6 +8,9 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/* \
  && install-php-extensions gd exif intl zip opcache pdo_sqlite sqlite3
 
+# Raise PHP memory (base image ships 128M; wp-cli extraction + Elementor need more).
+RUN printf "memory_limit=512M\n" > "$PHP_INI_DIR/conf.d/zz-memory.ini"
+
 # WP-CLI for headless provisioning.
 RUN curl -fsSL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /usr/local/bin/wp \
  && chmod +x /usr/local/bin/wp
