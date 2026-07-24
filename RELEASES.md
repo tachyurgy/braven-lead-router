@@ -8,5 +8,6 @@
   - `braven-child` hello-elementor child theme (Nunito Sans + Playfair Display, gold #c7945b palette) matching bravenagency.com.
   - Self-contained Docker image: WordPress + SQLite + Elementor provisioned headlessly via WP-CLI.
   - 26-assertion pure-PHP test suite for the routing engine + validator.
+  - Added `/docs/how-it-works.html` — big "How It Works" deep-dive explainer (full architecture, request lifecycle, routing engine with worked examples, ERD data model, capture pipeline, CRM payload, GA4/tracking, performance, a11y, deploy stack) with diagrams; cross-linked from `/docs/`.
 - **How:** `git clone` on Box B → `docker build -t braven-demo .` → `docker run -d --network kamal -v braven_demo_data:/data …` → `kamal-proxy deploy braven-demo --target braven-demo:80 --host braven-demo.levelbrook.com --tls`. DNS A `braven-demo`→5.78.227.227 (DNS-only).
 - **Verified:** see the session agent report (HTTPS 200, wizard end-to-end, CRM delivery logged, video filter).
