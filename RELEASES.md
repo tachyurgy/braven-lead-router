@@ -1,5 +1,15 @@
 # Releases — Braven Lead Router
 
+## 2026-07-24 — 1.0.1 container healthcheck fix
+- **What deployed:** https://braven-demo.levelbrook.com (Hetzner Box B) — same application, rebuilt image with a working container healthcheck. No functional/product changes.
+- **Changed:**
+  - The image defined no `HEALTHCHECK`, so it inherited `dunglas/frankenphp`'s, which curls Caddy's admin API at `http://localhost:2019/metrics`. Our `Caddyfile` sets `admin off`, so that endpoint never listens — the probe failed every 30s from first boot (**2,546 consecutive failures**, container labelled `unhealthy` for 21h) while the app served traffic normally with **0 restarts**.
+  - Added `provision/healthz.php` — a liveness endpoint independent of WordPress and the SQLite database — and an explicit `HEALTHCHECK` against it. Probing PHP rather than the static `/up` route means a wedged FrankenPHP worker is actually caught; `/up` is a Caddy `respond` and would return 200 even with PHP dead.
+  - `/up` deliberately left unchanged: kamal-proxy probes it with `Host: <container-id>`, so it must stay dependency-free.
+  - `--start-period=180s` to cover first-boot WP-CLI provisioning.
+- **How:** `git pull` on Box B → `docker build -t braven-demo .` (all heavy layers cached) → `docker rm -f braven-demo` + `docker run -d --name braven-demo --network kamal --restart unless-stopped -v braven_demo_data:/data -e SITE_URL=… -e ADMIN_USER=… -e ADMIN_PASS=… -e ADMIN_EMAIL=… braven-demo` → `docker exec kamal-proxy kamal-proxy deploy braven-demo --target braven-demo:80 --host braven-demo.levelbrook.com --tls`.
+- **Verified:** `Up 3 minutes (healthy)`, `FailingStreak=0`, 5 consecutive passing probes. HTTP 200 on `/`, `/training-library/`, `/docs/`, `/docs/how-it-works.html`, `/wp-admin/`, `/healthz.php` (body `ok`). Front page still renders the router. **Recreate was non-destructive** — DB is on the `braven_demo_data` volume, entrypoint took its `[provision] existing install` branch; 17 `blr_video` + 1 `blr_lead` intact, all plugins + `braven-child` theme active. Not re-run: the Playwright E2E wizard flow (unchanged code path).
+
 ## 2026-07-23 — 1.0.0 initial build + deploy
 - **What deployed:** https://braven-demo.levelbrook.com (Hetzner Box B, FrankenPHP + WordPress on SQLite behind kamal-proxy). Live self-select lead-routing tool, training video library, wp-admin Routing Console, and `/docs/` build documentation.
 - **Changed:**
