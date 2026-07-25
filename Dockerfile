@@ -34,10 +34,20 @@ COPY wp-theme/braven-child        wp-content/themes/braven-child
 RUN mkdir -p wp-content/mu-plugins
 COPY provision/mock-crm.php       wp-content/mu-plugins/mock-crm.php
 COPY provision/seed-pages.php     /usr/local/bin/seed-pages.php
+COPY provision/healthz.php        healthz.php
 COPY docs                         /var/www/html/docs
 COPY Caddyfile                    /etc/caddy/Caddyfile
 COPY docker-entrypoint.sh         /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80
+
+# Override the FrankenPHP base image's healthcheck. The base probes Caddy's admin
+# API on :2019, but our Caddyfile sets `admin off`, so the inherited check can
+# never pass and the container reports unhealthy forever while serving fine.
+# Probe our own PHP-backed endpoint instead: it proves Caddy routes AND the PHP
+# worker executes. start-period covers first-boot WP-CLI provisioning.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 \
+	CMD curl -fsS -o /dev/null http://localhost:80/healthz.php || exit 1
+
 ENTRYPOINT ["docker-entrypoint.sh"]
