@@ -35,3 +35,8 @@ add_filter( 'wp_resource_hints', function ( $hints, $relation ) {
 	}
 	return $hints;
 }, 10, 2 );
+
+// First-party analytics (lbtrack): loaded from levelbrook.com, posts to its collector.
+add_action( 'wp_footer', function () {
+	echo '<script>window.LB_CFG={endpoint:"https://levelbrook.com/e"}</script><script src="https://levelbrook.com/lb.js" defer></script>' . "\n";
+}, 99 );
